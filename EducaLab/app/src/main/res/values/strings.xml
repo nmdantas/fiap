@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">EducaLab</string>
+    <string name="service_name">EducaLabNotificationService</string>
     <string name="action_settings">Settings</string>
 </resources>

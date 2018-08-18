@@ -2,4 +2,7 @@
     <string name="app_name">EducaLab</string>
     <string name="service_name">EducaLabNotificationService</string>
     <string name="action_settings">Settings</string>
+    <string name="menssagem_permissao"> Mensagemvfd </string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
 </resources>

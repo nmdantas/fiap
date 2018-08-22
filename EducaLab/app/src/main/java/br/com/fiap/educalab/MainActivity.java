@@ -4,6 +4,10 @@ import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -11,12 +15,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+
+import java.util.List;
+
+import br.com.fiap.educalab.enumerators.CategoryType;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,7 +95,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FirebaseApp app = FirebaseApp.getInstance();
-        
+
+        PackageManager pm = this.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.PERMISSION_GRANTED);
+
+        for (ResolveInfo rInfo : list) {
+            ApplicationInfo appInfo = rInfo.activityInfo.applicationInfo;
+            Drawable icon = appInfo.loadIcon(pm);
+            String packageName = rInfo.resolvePackageName;
+            //CategoryType category = CategoryType.getByCode(appInfo.category);
+
+            Log.w("======================", "");
+            Log.w("Installed Applications", appInfo.loadLabel(pm).toString());
+            Log.w("Installed Applications", appInfo.packageName);
+            //Log.w("Installed Applications", category.getDescription());
+            Log.w("======================", "");
+        }
     }
 
     @Override

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "796272948339",
+    "firebase_url": "https://fiap-samsung-challenge.firebaseio.com",
+    "project_id": "fiap-samsung-challenge",
+    "storage_bucket": "fiap-samsung-challenge.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796272948339:android:f62df75afb804990",
+        "android_client_info": {
+          "package_name": "br.com.fiap.educalab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "796272948339-ck6tbcsltq077gbufufqlp0i2h2gdf71.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVhGiGyJ0j2hCS0AsQdaYKneCyJLb8dtc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

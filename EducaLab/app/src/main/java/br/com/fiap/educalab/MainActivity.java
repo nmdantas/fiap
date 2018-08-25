@@ -19,13 +19,17 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.fiap.educalab.enumerators.CategoryType;
+import br.com.fiap.educalab.models.AplicativoInstalado;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //grid view
+        GridView gv = findViewById(R.id.gridview);
+
         if(!isNotificationServiceEnabled()){
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
             enableNotificationListenerAlertDialog.show();
@@ -100,20 +107,34 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-        List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.PERMISSION_GRANTED);
+        final
+        List<AplicativoInstalado> apps = new ArrayList<>();
+        List<ResolveInfo> list = pm.queryIntentActivities(intent,
+                pm.PERMISSION_GRANTED);
 
         for (ResolveInfo rInfo : list) {
             ApplicationInfo appInfo = rInfo.activityInfo.applicationInfo;
             Drawable icon = appInfo.loadIcon(pm);
             String packageName = rInfo.resolvePackageName;
-            //CategoryType category = CategoryType.getByCode(appInfo.category);
 
             Log.w("======================", "");
             Log.w("Installed Applications", appInfo.loadLabel(pm).toString());
             Log.w("Installed Applications", appInfo.packageName);
             //Log.w("Installed Applications", category.getDescription());
             Log.w("======================", "");
+
+            apps.add(new AplicativoInstalado(appInfo.loadLabel(pm).toString(), appInfo.packageName));
         }
+
+        gv.setAdapter(new Adapter(this, apps));
+
+        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Snackbar.make(view, apps.get(i).getPackageName(), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
 
     @Override
@@ -137,7 +158,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }

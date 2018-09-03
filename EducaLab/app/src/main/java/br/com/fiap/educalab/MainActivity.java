@@ -2,6 +2,7 @@ package br.com.fiap.educalab;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Switch;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -91,8 +93,12 @@ public class MainActivity extends AppCompatActivity {
             enableNotificationListenerAlertDialog.show();
         }
 
+        //teste
 
+
+        //teste
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
             ApplicationInfo appInfo = rInfo.activityInfo.applicationInfo;
             Drawable icon = appInfo.loadIcon(pm);
             String packageName = rInfo.resolvePackageName;
+            //Switch sw = findViewById(R.id.switch1);
+
 
             Log.w("======================", "");
             Log.w("Installed Applications", appInfo.loadLabel(pm).toString());
@@ -123,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
             //Log.w("Installed Applications", category.getDescription());
             Log.w("======================", "");
 
-            apps.add(new AplicativoInstalado(appInfo.loadLabel(pm).toString(), appInfo.packageName));
+            apps.add(new AplicativoInstalado(appInfo.loadLabel(pm).toString(), appInfo.packageName,
+                    appInfo.loadIcon(pm)));
         }
 
         gv.setAdapter(new Adapter(this, apps));

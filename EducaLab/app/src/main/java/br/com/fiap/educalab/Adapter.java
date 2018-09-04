@@ -1,10 +1,6 @@
 package br.com.fiap.educalab;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +13,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.fiap.educalab.models.AplicativoInstalado;
+import br.com.fiap.educalab.shared.SharedContent;
 
 public class Adapter extends BaseAdapter{
 
@@ -67,7 +64,7 @@ public class Adapter extends BaseAdapter{
         //TextView t = (TextView) new TextView(ctx);
         t.setText(app.getNome());
         iv.setImageDrawable(app.getIcon());
-        sw.setChecked(app.getChk());
+        sw.setChecked(app.getBlocked());
         sw.setTag(app);
 
         sw.setOnClickListener(new View.OnClickListener() {
@@ -79,15 +76,18 @@ public class Adapter extends BaseAdapter{
                 Switch sw = (Switch) v;
 
                 AplicativoInstalado app = (AplicativoInstalado) v.getTag();
-                app.setChk(sw.isChecked());
+                app.setBlocked(sw.isChecked());
 
                 if (sw.isChecked()){
                     sSwOn = sw.getTextOn().toString();
                     Toast.makeText(ctx,sSwOn,Toast.LENGTH_SHORT).show();
+
+                    SharedContent.addToBlackList(app.getPackageName());
                 }
                 else{
                     sSwOff = sw.getTextOff().toString();
                     Toast.makeText(ctx,sSwOff,Toast.LENGTH_SHORT).show();
+                    SharedContent.removeFromBlackList(app.getPackageName());
                 }
             }
         });

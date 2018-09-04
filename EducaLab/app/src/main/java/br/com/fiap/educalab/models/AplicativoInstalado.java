@@ -1,14 +1,13 @@
 package br.com.fiap.educalab.models;
 
 import android.graphics.drawable.Drawable;
-import android.widget.Switch;
 
 public class AplicativoInstalado {
 
     private String nome;
     private String packageName;
     private Drawable icon;
-    private boolean chk;
+    private boolean blocked;
 
 
     public AplicativoInstalado() {
@@ -20,19 +19,19 @@ public class AplicativoInstalado {
         this.icon = icon;
         this.nome = nome;
         this.packageName = packageName;
-        //this.chk = chk;
+        //this.blocked = blocked;
     }
 
     public Drawable getIcon(){
         return icon;
     }
 
-    public void setChk(boolean chk) {
-        this.chk = chk;
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 
-    public boolean getChk(){
-        return chk;
+    public boolean getBlocked(){
+        return blocked;
     }
 
     public String getNome() {

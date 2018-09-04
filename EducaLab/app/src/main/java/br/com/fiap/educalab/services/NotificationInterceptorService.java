@@ -4,6 +4,12 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.fiap.educalab.shared.SharedContent;
 
 public class NotificationInterceptorService extends NotificationListenerService {
 
@@ -21,12 +27,13 @@ public class NotificationInterceptorService extends NotificationListenerService 
         String key = sbn.getKey();
         String packageName = sbn.getPackageName();
 
-        System.out.println("Key: " + key);
-        System.out.println("Package: " + packageName);
+        Log.i("NOTIFICATION-SERVICE","Key: " + key);
+        Log.i("NOTIFICATION-SERVICE","Package: " + packageName);
 
-        cancelNotification(key);
-
-        notify(sbn);
+        if (SharedContent.shouldBlock(packageName)) {
+            cancelNotification(key);
+            notify(sbn);
+        }
     }
 
     @Override

@@ -30,7 +30,6 @@ import com.google.firebase.FirebaseOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.fiap.educalab.enumerators.CategoryType;
 import br.com.fiap.educalab.models.AplicativoInstalado;
 
 public class MainActivity extends AppCompatActivity {

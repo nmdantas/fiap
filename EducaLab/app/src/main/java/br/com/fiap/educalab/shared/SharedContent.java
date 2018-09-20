@@ -30,4 +30,8 @@ public class SharedContent {
     public static void setExpireDate(LocalDate date) {
         expireDate = date;
     }
+    
+    public static boolean expired() {
+        return expireDate != null && expireDate.isBefore(LocalDate.now);
+    }
 }

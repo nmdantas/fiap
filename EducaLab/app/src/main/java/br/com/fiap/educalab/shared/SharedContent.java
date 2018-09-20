@@ -32,6 +32,6 @@ public class SharedContent {
     }
     
     public static boolean expired() {
-        return expireDate != null && expireDate.isBefore(LocalDateTime.now);
+        return expireDate != null && expireDate.isBefore(LocalDateTime.now());
     }
 }

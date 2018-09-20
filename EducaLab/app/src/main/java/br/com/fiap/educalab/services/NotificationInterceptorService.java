@@ -30,7 +30,9 @@ public class NotificationInterceptorService extends NotificationListenerService 
         Log.i("NOTIFICATION-SERVICE","Key: " + key);
         Log.i("NOTIFICATION-SERVICE","Package: " + packageName);
 
-        if (SharedContent.shouldBlock(packageName)) {
+        // Apenas cancelara as notificacoes caso o prazo nao esteja expirado
+        // e a aplicacao esteja na "black list"
+        if (!SharedContent.expired() && SharedContent.shouldBlock(packageName)) {
             cancelNotification(key);
             notify(sbn);
         }

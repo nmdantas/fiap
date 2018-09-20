@@ -22,16 +22,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TimePicker;
 import android.widget.Switch;
 import android.app.Activity;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.fiap.educalab.models.AplicativoInstalado;
+import br.com.fiap.educalab.shared.SharedContent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -144,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        
+        
+        // TimePicker
+        // Instanciar o time picker, etc
     }
 
     @Override
@@ -166,5 +174,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    
+    public onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        LocalDateTime selectedDate = LocalDate.now().atTime(hourOfDay, minute);
+        
+        SharedContent.setExpireDate(selectedDate);
     }
 }

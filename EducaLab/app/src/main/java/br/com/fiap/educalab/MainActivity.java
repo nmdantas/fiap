@@ -1,6 +1,7 @@
 package br.com.fiap.educalab;
 
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,9 +11,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -32,12 +35,15 @@ import com.google.firebase.FirebaseOptions;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 import br.com.fiap.educalab.models.AplicativoInstalado;
 import br.com.fiap.educalab.shared.SharedContent;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
     private static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
@@ -81,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private AlertDialog enableNotificationListenerAlertDialog;
-    
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,10 +104,6 @@ public class MainActivity extends AppCompatActivity {
             enableNotificationListenerAlertDialog.show();
         }
 
-        //teste
-
-
-        //teste
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -148,8 +151,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        
-        
+
         // TimePicker
         // Instanciar o time picker, etc
     }
@@ -170,15 +172,20 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //timer picker
+            DialogFragment timepicker = new TimePickerFragment();
+            timepicker.show(getSupportFragmentManager(),"time picker");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-    
-    public onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+       // Calendar c = Calendar.getInstance();
         LocalDateTime selectedDate = LocalDate.now().atTime(hourOfDay, minute);
-        
         SharedContent.setExpireDate(selectedDate);
+        SharedContent.getExpireDate();
     }
 }

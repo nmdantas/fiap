@@ -48,47 +48,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     private static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
 
-    private AlertDialog buildNotificationServiceAlertDialog(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle(R.string.app_name);
-        alertDialogBuilder.setMessage(R.string.menssagem_permissao);
-        alertDialogBuilder.setPositiveButton(R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS));
-                    }
-                });
-        alertDialogBuilder.setNegativeButton(R.string.no,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // If you choose to not enable the notification listener
-                        // the app. will not work as expected
-                    }
-                });
-        return(alertDialogBuilder.create());
-    }
-
-    private boolean isNotificationServiceEnabled(){
-        String pkgName = getPackageName();
-            final String flat = Settings.Secure.getString(getContentResolver(),
-                ENABLED_NOTIFICATION_LISTENERS);
-        if (!TextUtils.isEmpty(flat)) {
-            final String[] names = flat.split(":");
-            for (int i = 0; i < names.length; i++) {
-                final ComponentName cn = ComponentName.unflattenFromString(names[i]);
-                if (cn != null) {
-                    if (TextUtils.equals(pkgName, cn.getPackageName())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private AlertDialog enableNotificationListenerAlertDialog;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         //grid view
         GridView gv = findViewById(R.id.gridview);
 
-        if(!isNotificationServiceEnabled()){
+        if (!isNotificationServiceEnabled()){
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
             enableNotificationListenerAlertDialog.show();
         }
@@ -120,10 +79,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-        final
-        List<AplicativoInstalado> apps = new ArrayList<>();
-        List<ResolveInfo> list = pm.queryIntentActivities(intent,
-                pm.PERMISSION_GRANTED);
+        final List<AplicativoInstalado> apps = new ArrayList<>();
+        List<ResolveInfo> list = pm.queryIntentActivities(intent, pm.PERMISSION_GRANTED);
 
         for (ResolveInfo rInfo : list) {
             ApplicationInfo appInfo = rInfo.activityInfo.applicationInfo;
@@ -151,9 +108,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
                         .setAction("Action", null).show();
             }
         });
-
-        // TimePicker
-        // Instanciar o time picker, etc
     }
 
     @Override
@@ -183,9 +137,50 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-       // Calendar c = Calendar.getInstance();
-        LocalDateTime selectedDate = LocalDate.now().atTime(hourOfDay, minute);
-        SharedContent.setExpireDate(selectedDate);
-        SharedContent.getExpireDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+
+        SharedContent.setExpireDate(calendar.getTime());
     }
+
+    private AlertDialog buildNotificationServiceAlertDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.app_name);
+        alertDialogBuilder.setMessage(R.string.menssagem_permissao);
+        alertDialogBuilder.setPositiveButton(R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS));
+                    }
+                });
+        alertDialogBuilder.setNegativeButton(R.string.no,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // If you choose to not enable the notification listener
+                        // the app. will not work as expected
+                    }
+                });
+        return(alertDialogBuilder.create());
+    }
+
+    private boolean isNotificationServiceEnabled(){
+        String pkgName = getPackageName();
+        final String flat = Settings.Secure.getString(getContentResolver(),
+                ENABLED_NOTIFICATION_LISTENERS);
+        if (!TextUtils.isEmpty(flat)) {
+            final String[] names = flat.split(":");
+            for (int i = 0; i < names.length; i++) {
+                final ComponentName cn = ComponentName.unflattenFromString(names[i]);
+                if (cn != null) {
+                    if (TextUtils.equals(pkgName, cn.getPackageName())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private AlertDialog enableNotificationListenerAlertDialog;
 }

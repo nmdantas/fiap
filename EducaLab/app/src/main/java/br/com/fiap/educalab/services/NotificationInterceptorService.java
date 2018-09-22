@@ -6,9 +6,6 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.fiap.educalab.shared.SharedContent;
 
 public class NotificationInterceptorService extends NotificationListenerService {

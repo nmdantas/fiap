@@ -1,15 +1,13 @@
 package br.com.fiap.educalab.shared;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class SharedContent {
     private static final Set<String> PACKAGE_BLACK_LIST = new HashSet<>();
     
-    private static LocalDateTime expireDate = null;
+    private static Date expireDate = null;
 
     public static void addToBlackList(String packageName) {
         PACKAGE_BLACK_LIST.add(packageName);
@@ -23,15 +21,15 @@ public class SharedContent {
         return PACKAGE_BLACK_LIST.contains(packageName);
     }
     
-    public static LocalDateTime getExpireDate() {
+    public static Date getExpireDate() {
         return expireDate;
     }
     
-    public static void setExpireDate(LocalDateTime date) {
+    public static void setExpireDate(Date date) {
         expireDate = date;
     }
     
     public static boolean expired() {
-        return expireDate != null && expireDate.isBefore(LocalDateTime.now());
+        return expireDate != null && expireDate.before(new Date());
     }
 }

@@ -1,4 +1,4 @@
-package br.com.fiap.educalab;
+package br.com.fiap.educalab.timer;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

@@ -1,4 +1,4 @@
-package br.com.fiap.educalab;
+package br.com.fiap.educalab.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import br.com.fiap.educalab.R;
 import br.com.fiap.educalab.models.AplicativoInstalado;
 import br.com.fiap.educalab.shared.SharedContent;
 

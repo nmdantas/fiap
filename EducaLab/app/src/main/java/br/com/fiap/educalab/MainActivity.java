@@ -3,7 +3,6 @@ package br.com.fiap.educalab;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -11,13 +10,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -26,22 +23,17 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TimePicker;
-import android.widget.Switch;
-import android.app.Activity;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 
+import br.com.fiap.educalab.adapter.Adapter;
 import br.com.fiap.educalab.models.AplicativoInstalado;
 import br.com.fiap.educalab.shared.SharedContent;
+import br.com.fiap.educalab.timer.TimePickerFragment;
 
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
@@ -68,8 +60,10 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                      //  .setAction("Action", null).show();
+                Intent it = new Intent(MainActivity.this, ListActivity.class);
+                startActivity(it);
             }
         });
 

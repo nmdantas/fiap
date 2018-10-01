@@ -23,10 +23,16 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -37,6 +43,7 @@ import br.com.fiap.educalab.timer.TimePickerFragment;
 
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
+    private static final int RC_SIGN_IN = 0324;
     private static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
 
@@ -44,64 +51,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
-        //grid view
-        GridView gv = findViewById(R.id.gridview);
-
-        if (!isNotificationServiceEnabled()){
-            enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
-            enableNotificationListenerAlertDialog.show();
-        }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                      //  .setAction("Action", null).show();
-                Intent it = new Intent(MainActivity.this, ListActivity.class);
-                startActivity(it);
-            }
-        });
-
-        FirebaseApp app = FirebaseApp.getInstance();
-
-        PackageManager pm = this.getPackageManager();
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        final List<AplicativoInstalado> apps = new ArrayList<>();
-        List<ResolveInfo> list = pm.queryIntentActivities(intent, pm.PERMISSION_GRANTED);
-
-        for (ResolveInfo rInfo : list) {
-            ApplicationInfo appInfo = rInfo.activityInfo.applicationInfo;
-            Drawable icon = appInfo.loadIcon(pm);
-            String packageName = rInfo.resolvePackageName;
-            //Switch sw = findViewById(R.id.switch1);
-
-
-            Log.w("======================", "");
-            Log.w("Installed Applications", appInfo.loadLabel(pm).toString());
-            Log.w("Installed Applications", appInfo.packageName);
-            //Log.w("Installed Applications", category.getDescription());
-            Log.w("======================", "");
-
-            apps.add(new AplicativoInstalado(appInfo.loadLabel(pm).toString(), appInfo.packageName,
-                    appInfo.loadIcon(pm)));
-        }
-
-        gv.setAdapter(new Adapter(this, apps));
-
-        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Snackbar.make(view, apps.get(i).getPackageName(), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        login();
     }
 
     @Override
@@ -136,6 +87,29 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         calendar.set(Calendar.MINUTE, minute);
 
         SharedContent.setExpireDate(calendar.getTime());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                loadUserInfo(user);
+                loadContent();
+            } else {
+
+                if (response == null) {
+                    Toast.makeText(this, "Login Cancelado", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, response.getError().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     private AlertDialog buildNotificationServiceAlertDialog(){
@@ -174,6 +148,85 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
             }
         }
         return false;
+    }
+
+    private void loadContent() {
+        //grid view
+        GridView gv = findViewById(R.id.gridview);
+
+        if (!isNotificationServiceEnabled()){
+            enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
+            enableNotificationListenerAlertDialog.show();
+        }
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //  .setAction("Action", null).show();
+                Intent it = new Intent(MainActivity.this, ListActivity.class);
+                startActivity(it);
+            }
+        });
+
+        PackageManager pm = this.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        final List<AplicativoInstalado> apps = new ArrayList<>();
+        List<ResolveInfo> list = pm.queryIntentActivities(intent, pm.PERMISSION_GRANTED);
+
+        for (ResolveInfo rInfo : list) {
+            ApplicationInfo appInfo = rInfo.activityInfo.applicationInfo;
+            Drawable icon = appInfo.loadIcon(pm);
+            String packageName = rInfo.resolvePackageName;
+            //Switch sw = findViewById(R.id.switch1);
+
+
+            Log.w("======================", "");
+            Log.w("Installed Applications", appInfo.loadLabel(pm).toString());
+            Log.w("Installed Applications", appInfo.packageName);
+            //Log.w("Installed Applications", category.getDescription());
+            Log.w("======================", "");
+
+            apps.add(new AplicativoInstalado(appInfo.loadLabel(pm).toString(), appInfo.packageName,
+                    appInfo.loadIcon(pm)));
+        }
+
+        gv.setAdapter(new Adapter(this, apps));
+
+        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Snackbar.make(view, apps.get(i).getPackageName(), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+    private void login() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            // Choose authentication providers
+            List<AuthUI.IdpConfig> providers = Arrays.asList(
+                    new AuthUI.IdpConfig.EmailBuilder().build());
+
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(providers)
+                            .build(),
+                    RC_SIGN_IN);
+        } else {
+            loadUserInfo(user);
+        }
+    }
+
+    private void loadUserInfo(FirebaseUser user) {
+        Toast.makeText(this, String.format("Usuario logado - %s (%s)", user.getDisplayName(), user.getEmail()), Toast.LENGTH_SHORT).show();
     }
 
     private AlertDialog enableNotificationListenerAlertDialog;
